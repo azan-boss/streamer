@@ -3,8 +3,8 @@ aiohttp==3.11.14
 aiohttp-retry==2.9.1
 aiomysql==0.2.0     
 aiosignal==1.3.2    
-# Editable install with no version control (ali==1.0.0)
--e c:\users\rafy\desktop\dhq\nano
+pip uninstall -y rest_framework_simplejwt
+pip install djangorestframework-simplejwt
 annotated-types==0.7.0
 anyio==4.8.0
 asgiref==3.8.1

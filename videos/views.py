@@ -15,10 +15,9 @@ class VideoViewSet(viewsets.ModelViewSet):
             # Anyone can view videos
             permission_classes = [permissions.AllowAny]
         elif self.action == "create":
-            # Only admins and creators can create videos
+            # Only authenticated users can create videos
             permission_classes = [
                 permissions.IsAuthenticated,
-                (IsAdmin | IsResourceOwner),
             ]
         elif self.action in ["update", "partial_update", "destroy"]:
             # Admins can edit any video, creators can only edit their own
@@ -41,20 +40,20 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         # If user is not authenticated, return only public videos
         if not user.is_authenticated:
-            return Video.objects.filter(status="public")
+            return Video.objects.filter(visibility="public")
 
         # Admin can see all videos
-        if user.role == "admin":
+        if hasattr(user, 'role') and user.role == "admin":
             return Video.objects.all()
 
         # Creator can see their own videos (any status) and public videos
-        if user.role == "creator":
+        if hasattr(user, 'role') and user.role == "creator":
             return Video.objects.filter(
-                models.Q(uploader=user) | models.Q(status="public")
+                models.Q(uploader=user) | models.Q(visibility="public")
             )
 
         # Viewers and guests see only public videos
-        return Video.objects.filter(status="public")
+        return Video.objects.filter(visibility="public")
 
     def update(self, request, *args, **kwargs):
         video = self.get_object()

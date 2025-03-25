@@ -23,7 +23,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "confirm_password",
             "first_name",
             "last_name",
-            "role",
+            "role"
         ]
 
     def validate(self, data):
